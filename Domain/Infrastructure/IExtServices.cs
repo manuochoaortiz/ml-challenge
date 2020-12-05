@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Domain.Infrastructure
 {
     public interface IExtServices<T>
     {
-        T ByIP(string ip);
+        Task<T> ByIP(string ip);
     }
 }

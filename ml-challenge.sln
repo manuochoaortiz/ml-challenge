@@ -3,17 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiService", "ApiService\ApiService.csproj", "{FEEC72DA-DC90-4FDD-92DD-6F1FE4373280}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiService", "ApiService\ApiService.csproj", "{FEEC72DA-DC90-4FDD-92DD-6F1FE4373280}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8CB9E749-DBF8-4A7A-8EE3-612E5F03AE0D}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		ml-ch.png = ml-ch.png
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{C422EE6E-DF65-4143-850B-6BE3A129FF08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{C422EE6E-DF65-4143-850B-6BE3A129FF08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{5F4B2745-70FE-4017-820D-DBD7D37A15A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{5F4B2745-70FE-4017-820D-DBD7D37A15A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
