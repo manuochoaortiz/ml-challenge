@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Domain.Infrastructure
 {
     public interface IRepo<T>
     {
-        T ByIP(string ip);
-        void ForIP(string ip, T entity);
+        Task<T> ByIP(string ip);
+        Task ForIP(string ip, T entity);
     }
 }
