@@ -1,2 +1,2 @@
 # ml-challenge
-Challenge with Leandro Valido
+.NetCore Api Service developed with clean architecture and Repository pattern.
