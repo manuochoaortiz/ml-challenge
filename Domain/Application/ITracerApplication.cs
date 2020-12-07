@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Domain.Application
 {
     public interface ITracerApplication
     {
-        InfoIP ByIP(string ip);
+        Task<InfoIP> ByIP(string ip);
     }
 }

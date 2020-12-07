@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.ApiService;
 using Domain.Application;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace ApiService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TracerApiController : ControllerBase, ITracerApplication
+    public class TracerApiController : ControllerBase, ITracerApiController
     {
         private readonly ILogger<TracerApiController> _logger;
         private readonly ITracerApplication _tracerApplication;
@@ -22,10 +23,12 @@ namespace ApiService.Controllers
             _logger = logger;
             _tracerApplication = tracerApplication;
         }
-
-        public InfoIP ByIP(string ip)
+        
+        [HttpGet]
+        public async Task<InfoIP> ByIP(string ip)
+        //ActionResult?
         {
-            var infoIP = _tracerApplication.ByIP(ip);
+            var infoIP = await _tracerApplication.ByIP(ip);
             return infoIP;
         }
     }

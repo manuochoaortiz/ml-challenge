@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Domain.ApiService
 {
     public interface ITracerApiController
     {
-        InfoIP ByIP(string ip);
+        Task<InfoIP> ByIP(string ip);
     }
 }
