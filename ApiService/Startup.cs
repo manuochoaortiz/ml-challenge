@@ -2,6 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Application;
+using Domain.Entities;
+using Domain.Infrastructure;
+using Domain.Infrastructure.ExtServices;
+using Domain.Infrastructure.Repositories;
+using Infrastructure;
+using Infrastructure.ExtServices;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,7 +34,9 @@ namespace ApiService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            //services.AddSingleton<>
+            services.AddSingleton<ITracerApplication, TracerApplication>();
+            services.AddSingleton<IExtServices, ExtServices>();
+            services.AddSingleton<IRepo, MemoryCacheRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
