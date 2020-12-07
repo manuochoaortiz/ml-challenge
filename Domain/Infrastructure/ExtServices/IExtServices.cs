@@ -8,6 +8,5 @@ namespace Domain.Infrastructure.ExtServices
     public interface IExtServices
     {
         Task<T> GetUrlToJson<T>(string urlHttp);
-        Task<T[]> GetUrlToJsonList<T>(string urlHttp);
     }
 }

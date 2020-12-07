@@ -15,30 +15,12 @@ namespace Infrastructure.ExtServices
         {
             try
             {
-                //string flurlHttp = string.Format(_urlServive, key);
-                T entity = await urlHttp.GetJsonAsync<T>();
+               T entity = await urlHttp.GetJsonAsync<T>();
                 return await Task.FromResult(entity);
             }
             catch (Exception ex)
             {
                 T entity = default;
-                return await Task.FromResult(entity);
-
-            }
-
-        }
-
-        public async Task<T[]> GetUrlToJsonList<T>(string urlHttp)
-        {
-            try
-            {
-                //string flurlHttp = string.Format(_urlServive, key);
-                T[] entity = await urlHttp.GetJsonAsync<T[]>();
-                return await Task.FromResult(entity);
-            }
-            catch (Exception ex)
-            {
-                T[] entity = default;
                 return await Task.FromResult(entity);
 
             }
