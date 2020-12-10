@@ -1,60 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+//using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Domain.Entities
 {
     public class InfoIP
     {
-        //public InfoIP()
-        //{
-        //    _ip2Country = new Ip2Country();
-        //    _restCountry = new RestCountry();
-        //}
-
-
         public string IP { get; set; }
-        private Ip2Country _ip2Country { get; set; }
-        public string CountryName { get { return _ip2Country.countryName; } }
-        public string CountryIso { get { return _ip2Country.countryCode; } }
+        public string CountryName { get; private set; }
+        public string CountryIso { get; private set; }
+        public IList<string> Languajes { get; private set; }
+        public IList<string> Currencies { get; private set; }
+        public IList<string> CurrentTimes { get; private set; }
 
-        private RestCountry _restCountry { get; set; }
-        public string Languajes { get {
-                return _restCountry != null && _restCountry.Languages != null
-                    ? string.Join(",", _restCountry.Languages.Select(p => p.name)) : "";  
-            }}
+        [JsonIgnore]
+        public IList<string> Timezones { get; private set; }
 
-        public string Currencies { get {
-                return _restCountry != null && _restCountry.Currencies != null
-                    ? string.Join(",", _restCountry.Currencies.Select(p => p.name)) : "";
-            }
-        }
-
-        private Currency Currency { get; set; }
-        private Geo Geo { get; set; }
-
-        public InfoIP(string ip)
+        public InfoIP(string ip, IpCountry country, CountryDetails countryDetails)
         {
             IP = ip;
+
+            this.CountryName = country.countryName;
+            this.CountryIso = country.countryCode;
+
+            this.Languajes = countryDetails.Languages ?? new List<string>();
+            this.Currencies = countryDetails.Currencies ?? new List<string>();
+            this.Timezones = countryDetails.Timezones ?? new List<string>();
         }
 
-        public InfoIP WithIp2Country(Ip2Country country)
+        public void CalculateCurrentDate()
         {
-            _ip2Country = country;
-            return this;
+            DateTime utcNow = DateTime.UtcNow;
+            this.CurrentTimes = this.Timezones.Select(p => CurrentDate(p, utcNow)).ToList() ?? new List<string>();
         }
 
-        public InfoIP WithRestCountry(RestCountry restCountry)
+        private string CurrentDate(string timeZone, DateTime utcNow)
         {
-            _restCountry = restCountry;
-            return this;
+            int hhTimezone = 0;
+            int mmTimezone = 0;
+
+            var arrayTimeZone = timeZone.Split(":");
+            if (arrayTimeZone != null && arrayTimeZone.Length > 0)
+            { 
+                string _hhTimezone = arrayTimeZone[0].Substring(arrayTimeZone[0].Length - 3, 2);
+                hhTimezone = int.Parse(_hhTimezone);
+                string _mmTimezone = arrayTimeZone[1].Substring(arrayTimeZone[1].Length - 2, 2);
+                mmTimezone = int.Parse(_mmTimezone);
+            }
+
+            TimeSpan offset = new TimeSpan(hhTimezone, mmTimezone, 00);
+            TimeZoneInfo mawson = TimeZoneInfo.CreateCustomTimeZone(timeZone, offset, timeZone, timeZone);
+            var newDate = TimeZoneInfo.ConvertTimeFromUtc(utcNow, mawson);
+
+            return timeZone + " - " + newDate.ToString("HH:mm dd/MM/yyyy");
         }
 
-        public InfoIP WithGeo(Geo geo)
-        {
-            Geo = geo;
-            return this;
-        }
     }
 }

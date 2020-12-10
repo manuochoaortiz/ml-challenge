@@ -14,40 +14,55 @@ namespace Domain.Application
 {
     public class TracerApplication : ITracerApplication
     {
-        private readonly IExtServices _extServices;
         private readonly IRepo _repo;
-        public TracerApplication(IExtServices extServices,
-                                IRepo repo,
-                                IServiceScopeFactory serviceScopeFactory)
+        private readonly IServices<IpCountry> _ipCountryService;
+        private readonly IServices<CountryDetails> _countryDetailsService;
+        
+        public TracerApplication(IRepo repo,
+                                IServices<IpCountry> ipCountryService,
+                                IServices<CountryDetails> countryDetailsService)
         {
-            _extServices = extServices;
             _repo = repo;
+            _ipCountryService = ipCountryService;
+            _countryDetailsService = countryDetailsService;
         }
 
         public async Task<InfoIP> ByIP(string ip)
         {
-            InfoIP info = new InfoIP(ip);
+            var ip2CountryTask = this.GetIpCountryFromRepoOrService(ip);
+            var restCountryTask = this.GetCountryDetailsFromRepoOrService(ip2CountryTask.Result.countryCode);
 
-            var ip2CountryTask = this.GetFromRepoOrService<Ip2Country>("https://api.ip2country.info/ip?{0}", "Ip2Country", ip);
-            var restCountryTask = this.GetFromRepoOrService<List<RestCountry>>("https://restcountries.eu/rest/v2/name/{0}", "RestCountry", ip2CountryTask.Result.countryName);
+            InfoIP info = new InfoIP(ip, ip2CountryTask.Result, restCountryTask.Result);
 
-            info.WithIp2Country(ip2CountryTask.Result)
-                .WithRestCountry(restCountryTask.Result.FirstOrDefault());
-
-
+            info.CalculateCurrentDate();
             return await Task.FromResult(info);
         }
 
-        private async Task<T> GetFromRepoOrService<T>(string urlService, string repoKey, string key)
+        private async Task<IpCountry> GetIpCountryFromRepoOrService(string ip)
         {
-            var objectTask = _repo.GetByKey<T>(repoKey + key);
+            var objectTask = _repo.GetByKey<IpCountry>("IpCountry" + ip);
             if (objectTask.Result == null)
             {
-                var url = string.Format(urlService, key);
-                objectTask = _extServices.GetUrlToJson<T>(url);
+                objectTask = _ipCountryService.GetEntityByKey(ip);
 
                 Thread repoSetThread = new Thread(() =>
-                    _repo.SetForKey<T>(repoKey + key, objectTask.Result)
+                    _repo.SetForKey<IpCountry>("IpCountry" + ip, objectTask.Result)
+                );
+                repoSetThread.Start();
+            }
+
+            return await objectTask;
+        }
+
+        private async Task<CountryDetails> GetCountryDetailsFromRepoOrService(string cod)
+        {
+            var objectTask = _repo.GetByKey<CountryDetails>("CountryDetails" + cod);
+            if (objectTask.Result == null)
+            {
+                objectTask = _countryDetailsService.GetEntityByKey(cod);
+
+                Thread repoSetThread = new Thread(() =>
+                    _repo.SetForKey<CountryDetails>("CountryDetails" + cod, objectTask.Result)
                 );
                 repoSetThread.Start();
             }

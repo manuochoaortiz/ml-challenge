@@ -2,17 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Entities
+namespace Infrastructure.Entities
 {
     public class RestCountry
     {
-        //public RestCountry()
-        //{
-        //    Languages = new List<RestCountryLanguage>();
-        //    Currencies = new List<RestCountryCurrency>();
-        //}
         public IList<RestCountryLanguage> Languages { get; set; }
         public IList<RestCountryCurrency> Currencies { get; set; }
+        public IList<string> Timezones { get; set; }
     }
 
     public class RestCountryLanguage
