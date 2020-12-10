@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Infrastructure.ExtServices
 {
-    public interface IExtServices
+    public interface IServices<T>
     {
-        Task<T> GetUrlToJson<T>(string urlHttp);
+        Task<T> GetEntityByKey(string key);
     }
 }

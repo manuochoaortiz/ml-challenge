@@ -35,7 +35,9 @@ namespace ApiService
         {
             services.AddControllers();
             services.AddSingleton<ITracerApplication, TracerApplication>();
-            services.AddSingleton<IExtServices, ExtServices>();
+            //services.AddSingleton<IExtServices, ExtServices>();
+            services.AddSingleton<IServices<CountryDetails>, CountryDetailsService>();
+            services.AddSingleton<IServices<IpCountry>, IpCountryService>();
             services.AddSingleton<IRepo, MemoryCacheRepo>();
         }
 
