@@ -19,7 +19,6 @@ namespace Domain.Entities
 
         [JsonIgnore]
         public IList<string> Timezones { get; private set; }
-
         public InfoIP(string ip, IpCountry country, CountryDetails countryDetails)
         {
             IP = ip;
@@ -31,6 +30,7 @@ namespace Domain.Entities
             this.Currencies = countryDetails.Currencies ?? new List<string>();
             this.Timezones = countryDetails.Timezones ?? new List<string>();
         }
+
 
         public void CalculateCurrentDate()
         {
@@ -46,7 +46,7 @@ namespace Domain.Entities
             var arrayTimeZone = timeZone.Split(":");
             if (arrayTimeZone != null && arrayTimeZone.Length > 0)
             { 
-                string _hhTimezone = arrayTimeZone[0].Substring(arrayTimeZone[0].Length - 3, 2);
+                string _hhTimezone = arrayTimeZone[0].Substring(arrayTimeZone[0].Length - 3, 3);
                 hhTimezone = int.Parse(_hhTimezone);
                 string _mmTimezone = arrayTimeZone[1].Substring(arrayTimeZone[1].Length - 2, 2);
                 mmTimezone = int.Parse(_mmTimezone);
