@@ -26,7 +26,7 @@ namespace Infrastructure.ExtServices
                     Languages = taskGet.Languages != null 
                                 ? taskGet.Languages.Select(p => p.name).ToList() : new List<string>(),
                     Currencies = taskGet.Currencies != null
-                                ? taskGet.Currencies.Select(p => p.name).ToList() : new List<string>(),
+                                ? taskGet.Currencies.Select(p => p.code).ToList() : new List<string>(),
                     Timezones = taskGet.Timezones != null
                                 ? taskGet.Timezones.Select(p => p).ToList() : new List<string>(),
                 };

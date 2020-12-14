@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.Application;
+using Domain.Application.Abstractions;
 using Domain.Entities;
 using Domain.Infrastructure;
 using Domain.Infrastructure.ExtServices;
@@ -33,12 +34,17 @@ namespace ApiService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.WriteIndented = true;
+            });
             services.AddSingleton<ITracerApplication, TracerApplication>();
-            //services.AddSingleton<IExtServices, ExtServices>();
+            services.AddSingleton<ICountryApplication, CountryApplication>();
             services.AddSingleton<IServices<CountryDetails>, CountryDetailsService>();
             services.AddSingleton<IServices<IpCountry>, IpCountryService>();
             services.AddSingleton<IRepo, MemoryCacheRepo>();
+
+            services.AddSingleton<IServices<Currency>, CurrencyService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

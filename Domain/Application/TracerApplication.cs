@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Application.Abstractions;
+using Domain.Entities;
 using Domain.Infrastructure;
 using Domain.Infrastructure.ExtServices;
 using Domain.Infrastructure.Repositories;
@@ -14,60 +15,49 @@ namespace Domain.Application
 {
     public class TracerApplication : ITracerApplication
     {
-        private readonly IRepo _repo;
-        private readonly IServices<IpCountry> _ipCountryService;
-        private readonly IServices<CountryDetails> _countryDetailsService;
-        
-        public TracerApplication(IRepo repo,
-                                IServices<IpCountry> ipCountryService,
-                                IServices<CountryDetails> countryDetailsService)
+        //private readonly IRepo _repo;
+        //private readonly IServices<IpCountry> _ipCountryService;
+        //private readonly IServices<CountryDetails> _countryDetailsService;
+        private readonly ICountryApplication _countryApplication;
+        //private readonly IServices<Currency> _currencyService;
+
+        public TracerApplication(ICountryApplication countryApplication)
         {
-            _repo = repo;
-            _ipCountryService = ipCountryService;
-            _countryDetailsService = countryDetailsService;
+            _countryApplication = countryApplication;
+            //_currencyService.GetEntityByKey("");
+
         }
 
         public async Task<InfoIP> ByIP(string ip)
         {
-            var ip2CountryTask = this.GetIpCountryFromRepoOrService(ip);
-            var restCountryTask = this.GetCountryDetailsFromRepoOrService(ip2CountryTask.Result.countryCode);
 
-            InfoIP info = new InfoIP(ip, ip2CountryTask.Result, restCountryTask.Result);
 
+
+
+            var ipCountryTask = _countryApplication.GetIpCountryFromRepo<IpCountry>(ip);
+            if (ipCountryTask.Result == null)
+            {
+                ipCountryTask = _countryApplication.GetIpCountryFromService(ip);
+                _countryApplication.SaveIpCountryToRepo(ip, ipCountryTask.Result);
+            }
+
+            string countryCode = ipCountryTask.Result.countryCode;
+            var countryDetailsTask = _countryApplication.GetCountryDetailsFromRepo<CountryDetails>(countryCode);
+            if (countryDetailsTask.Result == null)
+            {
+                countryDetailsTask = _countryApplication.GetCountryDetailsFromService(countryCode);
+                _countryApplication.SaveCountryDetailsToRepo(countryCode, countryDetailsTask.Result);
+            }
+
+            //● Distancia estimada entre Buenos Aires y el país, en km.
+
+            InfoIP info = new InfoIP(ip, ipCountryTask.Result, countryDetailsTask.Result);
+            
             info.CalculateCurrentDate();
             return await Task.FromResult(info);
         }
 
-        private async Task<IpCountry> GetIpCountryFromRepoOrService(string ip)
-        {
-            var objectTask = _repo.GetByKey<IpCountry>("IpCountry" + ip);
-            if (objectTask.Result == null)
-            {
-                objectTask = _ipCountryService.GetEntityByKey(ip);
 
-                Thread repoSetThread = new Thread(() =>
-                    _repo.SetForKey<IpCountry>("IpCountry" + ip, objectTask.Result)
-                );
-                repoSetThread.Start();
-            }
 
-            return await objectTask;
-        }
-
-        private async Task<CountryDetails> GetCountryDetailsFromRepoOrService(string cod)
-        {
-            var objectTask = _repo.GetByKey<CountryDetails>("CountryDetails" + cod);
-            if (objectTask.Result == null)
-            {
-                objectTask = _countryDetailsService.GetEntityByKey(cod);
-
-                Thread repoSetThread = new Thread(() =>
-                    _repo.SetForKey<CountryDetails>("CountryDetails" + cod, objectTask.Result)
-                );
-                repoSetThread.Start();
-            }
-
-            return await objectTask;
-        }
     }
 }
