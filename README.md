@@ -3,8 +3,8 @@
 
 Docker Implementation:
 
-EndPoins:
-{host}/TrackerApi/TrackByIp?ip={IpAddres}
+EndPoins:  
+{host}/TrackerApi/TrackByIp?ip={IpAddres}  
 returns a json with Ip information, ex:
 ```json
 {
@@ -21,8 +21,8 @@ returns a json with Ip information, ex:
   "Moneda": "EUR (1 USD = 0,817599 EUR)"
 }
 ```
-{host}/TrackerApi/GetCounterCountry
-Returns a JSon with statistical information of request
+{host}/TrackerApi/GetCounterCountry  
+Returns a JSon with statistical information of request  
 ```json
 {
   "Distancia mas lejana": "Germany 11489 KM",
