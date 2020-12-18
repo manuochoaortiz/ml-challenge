@@ -7,7 +7,10 @@ services:
     build:
       context: .
       target: $t
+      args: 
+        buildconfiguration: $c
     environment: 
+      - ASPNETCORE_ENVIRONMENT=$c
       - ASPNETCORE_URLS=http://+:80/
     restart: unless-stopped
     ports:
@@ -15,7 +18,7 @@ services:
     networks: 
       - backend
 
-  redis:
+  redis-host:
     image: redis:latest
     container_name: redis-container
     restart: unless-stopped

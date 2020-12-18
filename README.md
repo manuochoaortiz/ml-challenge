@@ -1,7 +1,13 @@
 # ml-challenge
 .NetCore Api Service developed with DDD architecture and CQRS pattern.
 
-Docker Implementation:
+Docker Implementation:  
+I use docker-compose version: '3.8', just rune the next command to run the Api and Redis in docker
+```t=build docker-compose up --build```  
+
+Api is running on localhost:64139 port and redis on localhost:6379
+
+t=build docker-compose down
 
 EndPoins:  
 ```{host}/TrackerApi/TrackByIp?ip={IpAddres}```  

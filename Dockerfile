@@ -4,7 +4,8 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1  as build
 WORKDIR /
 COPY . .
-RUN dotnet publish IpTracker.Api/IpTracker.Api.csproj -c Release -o /app  --disable-parallel
+ARG buildconfiguration
+RUN dotnet publish IpTracker.Api/IpTracker.Api.csproj -c ${buildconfiguration} -o /app  --disable-parallel
 WORKDIR /app
 ENTRYPOINT ["dotnet", "IpTracker.Api.dll"]
 
