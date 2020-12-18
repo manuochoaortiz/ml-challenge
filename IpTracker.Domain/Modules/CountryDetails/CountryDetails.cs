@@ -38,6 +38,11 @@ namespace IpTracker.Domain.Modules.CountryDetails
             return CurrentDateTimes;
         }
 
+        public bool HasCurrency()
+        {
+            return (CurrencyCodes != null && CurrencyCodes.Count > 0);
+        }
+
         private static string CurrentDateByTimeZone(string timeZone, DateTime utcNow)
         {
             int hhTimezone = 0;
