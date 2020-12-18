@@ -21,7 +21,6 @@ namespace IpTracker.Api.Application.Queries
         private readonly ICurrencyService _currencyService;
         private readonly ICounterCountryRepository _counterCountryRepository;
         
-
         public GetIpTrackByIpQueryHandler(ICountryRepository countryRepository, 
                                         ICountryService countryService,
                                         ICountryDetailsRepository countryDetailsRepository,
@@ -44,6 +43,7 @@ namespace IpTracker.Api.Application.Queries
         {
             var viewModel = new GetIpTrackByIpViewModel();
 
+            //Query Country By IP
             var countryTask = _countryRepository.GetAsync(request.Ip);
             if (countryTask.Result == null)
             {
@@ -53,24 +53,36 @@ namespace IpTracker.Api.Application.Queries
                 _ = Task.Run(() => _countryRepository.Add(countryTask.Result));
             }
 
+            //Query Country Details By CountryCode
             string countryCode = countryTask.Result.CountryCode;
             var countryDetailsTask = _countryDetailsRepository.GetAsync(countryCode);
             if (countryDetailsTask.Result == null)
             {
                 countryDetailsTask = _countryDetailsService.GetAsync(countryCode);
+                if (countryDetailsTask.Result == null)
+                    throw new ApplicationException("Country not found");
                 _ = Task.Run(() => _countryDetailsRepository.Add(countryDetailsTask.Result));
             }
 
-            string currencyCode = countryDetailsTask.Result.CurrencyCodes.FirstOrDefault();
-            var currencyTask = _currencyRepository.GetAsync(currencyCode);
-            if (currencyTask.Result == null)
-            {
-                currencyTask = _currencyService.GetAsync(currencyCode);
-                _ = Task.Run(() => _currencyRepository.Add(currencyTask.Result));
+            //Query Currency By Country CurrencyCode
+            Currency currency = null;
+            if (countryDetailsTask.Result.HasCurrency())
+            { 
+                string currencyCode = countryDetailsTask.Result.CurrencyCodes.FirstOrDefault();
+                var currencyTask = _currencyRepository.GetAsync(currencyCode);
+                if (currencyTask.Result == null)
+                {
+                    currencyTask = _currencyService.GetAsync(currencyCode);
+                    if (currencyTask.Result != null)
+                        _ = Task.Run(() => _currencyRepository.Add(currencyTask.Result));
+                }
+                currency = currencyTask.Result;
             }
 
-            viewModel.Load(countryTask.Result, countryDetailsTask.Result, currencyTask.Result);
+            //Load info in viewModel
+            viewModel.Load(countryTask.Result, countryDetailsTask.Result, currency);
 
+            //Log Counter for Country in new thread
             _ = Task.Run(() =>
                 _counterCountryRepository.Increment(new CounterCountry()
                 {

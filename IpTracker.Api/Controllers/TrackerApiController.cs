@@ -40,8 +40,6 @@ namespace IpTracker.Api.Controllers
             }
         }
 
-        
-
         [HttpGet("GetCounterCountry")]
         public async Task<ActionResult<GetCounterCountryViewModel>> GetCounterCountry()
         {

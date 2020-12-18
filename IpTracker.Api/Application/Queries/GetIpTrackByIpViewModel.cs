@@ -37,9 +37,7 @@ namespace IpTracker.Api.Application.Queries
             CountryName = country.CountryName;
             Languajes = countryDetails.Languages ?? new List<string>();
             CurrentDateTimes = countryDetails.CalcCurrentDateTimes();
-            Currency = string.Format("{0} (1 {1} = {2} {0})", currency.CurrencyCode
-                                                            , currency.CurrencyCodeExchange
-                                                            , currency.Value);
+            Currency = GetCurrencyText(countryDetails, currency);
             Distance = countryDetails.CalculateDistanceFrom(LatBA, LonBA);
             DistanceTo = string.Format("{0} KM de ({1}, {2}) a ({3}, {4})", Distance
                                                                             , LatBA
@@ -47,6 +45,20 @@ namespace IpTracker.Api.Application.Queries
                                                                             , countryDetails.Lat
                                                                             , countryDetails.Lon);
 
+        }
+
+        private static string GetCurrencyText(CountryDetails countryDetails, Currency currency) 
+        {
+            string currencyText = "";
+            if (countryDetails.HasCurrency())
+            {
+                currencyText = currency == null 
+                    ? countryDetails.CurrencyCodes.FirstOrDefault()
+                    : string.Format("{0} (1 {1} = {2} {0})", currency.CurrencyCode
+                                                            , currency.CurrencyCodeExchange
+                                                            , currency.Value);
+            }
+            return currencyText;
         }
     }
 }
