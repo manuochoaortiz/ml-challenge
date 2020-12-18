@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using IpTracker.Api.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace IpTracker.Api.Controllers
@@ -14,10 +15,12 @@ namespace IpTracker.Api.Controllers
     public class TrackerApiController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IConfiguration _configuration;
 
-        public TrackerApiController(IMediator mediator)
+        public TrackerApiController(IMediator mediator, IConfiguration configuration)
         {
             _mediator = mediator;
+            _configuration = configuration;
         }
 
         [HttpGet("TrackByIp")]
@@ -56,6 +59,12 @@ namespace IpTracker.Api.Controllers
             {
                 return BadRequest("Error: " + ex.Message);
             }
+        }
+
+        [HttpGet("Test")]
+        public async Task<ActionResult<string>> Test()
+        {
+            return await Task.FromResult(_configuration.GetValue<string>("Key"));
         }
 
     }
