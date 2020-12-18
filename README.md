@@ -5,7 +5,8 @@ Docker Implementation:
 
 EndPoins:  
 ```{host}/TrackerApi/TrackByIp?ip={IpAddres}```  
-returns a json with Ip information, ex:
+Returns a json with Ip information.  
+Example:
 ```json
 {
   "ip": "5.6.7.8",
@@ -21,8 +22,12 @@ returns a json with Ip information, ex:
   "Moneda": "EUR (1 USD = 0,817599 EUR)"
 }
 ```
+Azure & RedisLab Free Demo [https://manu-ml-challenge.azurewebsites.net/TrackerApi/TrackByIp?ip=5.6.7.8](https://manu-ml-challenge.azurewebsites.net/TrackerApi/TrackByIp?ip=5.6.7.8)  
+
+
 ```{host}/TrackerApi/GetCounterCountry```  
 Returns a JSon with statistical information of request  
+Example:
 ```json
 {
   "Distancia mas lejana": "Germany 11489 KM",
@@ -41,4 +46,5 @@ Returns a JSon with statistical information of request
 	}
   ]
 }
-```
+```  
+Azure & RedisLab Free Demo [https://manu-ml-challenge.azurewebsites.net/TrackerApi/GetCounterCountry](https://manu-ml-challenge.azurewebsites.net/TrackerApi/GetCounterCountry)  
