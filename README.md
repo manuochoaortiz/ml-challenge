@@ -1,19 +1,20 @@
 # ml-challenge
-.NetCore Api Service developed with DDD architecture and CQRS pattern.
+Api de .NetCore usando el enfoque DDD y patrones CQRS y Repository
 
-**Docker Implementation:**  
-I use docker-compose version: '3.8', just rune the next command to run the Api and Redis in docker  
+**Dockerización**  
+Utilicé docker-compose version: '3.8' y multi-stage en el Docker File.  
+Comando para ejecutar el docker compose y subir las imagenes de Api y Redis
 ```c=Production t=build docker-compose up --build```  
 
-Api is running on localhost:64139 port and redis on localhost:6379.
+La Api se ejecuta en localhost:64139 y redis en localhost:6379.
 
-To shut down the images run the command  
+Comando para bajar las imagenes  
 ```c=Production t=build docker-compose down```
 
 **EndPoins:**  
 **```{host}/TrackerApi/TrackByIp?ip={IpAddres}```**  
-Returns a json with Ip information.  
-Example:
+Retorna un JSON con la informacion de una ip.  
+Ejemplo:
 ```json
 {
   "ip": "5.6.7.8",
@@ -33,8 +34,8 @@ Azure & RedisLab Free Demo [https://manu-ml-challenge.azurewebsites.net/TrackerA
 
 
 **```{host}/TrackerApi/GetCounterCountry```**  
-Returns a JSon with statistical information of request  
-Example:
+Retorna un JSON con informacion estadistica de las ip solicitadas
+Ejemplo:
 ```json
 {
   "Distancia mas lejana": "Germany 11489 KM",
