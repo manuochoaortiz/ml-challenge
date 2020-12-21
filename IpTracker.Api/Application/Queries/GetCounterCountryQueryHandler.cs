@@ -20,7 +20,7 @@ namespace IpTracker.Api.Application.Queries
             var viewModel = new GetCounterCountryViewModel();
             var listCounterCountry = await _counterCountryRepository.GetAsync();
 
-            viewModel.Load(listCounterCountry);
+            viewModel.Load(new CounterCountryReport() { List = listCounterCountry } );
             return await Task.FromResult(viewModel);
         }
     }
