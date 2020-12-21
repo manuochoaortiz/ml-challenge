@@ -31,16 +31,16 @@ namespace IpTracker.Domain.Modules.CountryDetails
             return Math.Truncate(Convert.ToDecimal(((Math.Acos(theDistance) * (180.0 / Math.PI)))) * 69.09M * 1.6093M);
         }
 
+        public bool HasCurrency()
+        {
+            return (CurrencyCodes != null && CurrencyCodes.Count > 0);
+        }
+
         public IList<string> CalcCurrentDateTimes()
         {
             DateTime utcNow = DateTime.UtcNow;
             IList<string> CurrentDateTimes = Timezones.Select(p => CurrentDateByTimeZone(p, utcNow)).ToList() ?? new List<string>();
             return CurrentDateTimes;
-        }
-
-        public bool HasCurrency()
-        {
-            return (CurrencyCodes != null && CurrencyCodes.Count > 0);
         }
 
         private static string CurrentDateByTimeZone(string timeZone, DateTime utcNow)
